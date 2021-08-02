@@ -1,0 +1,94 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://fonts/Xolonium-Regular.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Controls.gd" type="Script" id=2]
+
+[sub_resource type="DynamicFont" id=1]
+size = 108
+font_data = ExtResource( 1 )
+
+[sub_resource type="CapsuleShape2D" id=2]
+
+[sub_resource type="CapsuleShape2D" id=3]
+
+[sub_resource type="CapsuleShape2D" id=4]
+
+[sub_resource type="CapsuleShape2D" id=5]
+radius = 6.46947
+height = 59.9043
+
+[node name="Controls" type="Node2D"]
+modulate = Color( 1, 1, 1, 0.443137 )
+position = Vector2( -0.594604, -4.16222 )
+scale = Vector2( 5, 5 )
+script = ExtResource( 2 )
+
+[node name="Left" type="Label" parent="."]
+margin_left = 2.35514
+margin_top = -0.0935354
+margin_right = 82.3551
+margin_bottom = 130.906
+rect_scale = Vector2( 0.2, 0.2 )
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 0.619608, 0.619608, 0.619608, 1 )
+text = "◀"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="Left"]
+position = Vector2( 123.678, 11.741 )
+rotation = 1.5708
+scale = Vector2( 5.42075, 3.54246 )
+shape = SubResource( 2 )
+passby_press = true
+action = "p1_left"
+
+[node name="Button" type="Label" parent="."]
+margin_left = 33.8175
+margin_top = -0.241171
+margin_right = 118.818
+margin_bottom = 130.759
+rect_scale = Vector2( 0.2, 0.2 )
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 0.619608, 0.619608, 0.619608, 1 )
+text = "●"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="Button"]
+position = Vector2( 121.697, 11.741 )
+rotation = 1.57311
+scale = Vector2( 5.421, 3.931 )
+shape = SubResource( 3 )
+passby_press = true
+
+[node name="Right" type="Label" parent="."]
+margin_left = 67.5875
+margin_top = 0.317026
+margin_right = 147.588
+margin_bottom = 131.317
+rect_scale = Vector2( 0.2, 0.2 )
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 0.619608, 0.619608, 0.619608, 1 )
+text = "▶"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="Right"]
+position = Vector2( 93.5219, 11.7406 )
+rotation = 1.57143
+scale = Vector2( 5.421, 3.542 )
+shape = SubResource( 4 )
+passby_press = true
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2( 42.6723, 13.0744 )
+rotation = 1.57107
+shape = SubResource( 5 )

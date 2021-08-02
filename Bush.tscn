@@ -1,0 +1,81 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://images/bush1.png" type="Texture" id=1]
+[ext_resource path="res://Bush.gd" type="Script" id=2]
+[ext_resource path="res://images/bush3.png" type="Texture" id=3]
+[ext_resource path="res://images/bush2.png" type="Texture" id=4]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 1 ), ExtResource( 4 ), ExtResource( 3 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 8.0
+
+[sub_resource type="Gradient" id=3]
+offsets = PoolRealArray( 0.0779221, 0.334416, 0.987013 )
+colors = PoolColorArray( 0.0276947, 0.236328, 0.0578488, 1, 0.362703, 0.564035, 0.380331, 1, 0.566788, 0.763672, 0.576786, 1 )
+
+[sub_resource type="GradientTexture" id=4]
+gradient = SubResource( 3 )
+
+[sub_resource type="ParticlesMaterial" id=5]
+lifetime_randomness = 0.09
+trail_color_modifier = SubResource( 4 )
+emission_shape = 1
+emission_sphere_radius = 6.85
+flag_disable_z = true
+spread = 180.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 17.14
+initial_velocity_random = 0.93
+angular_velocity = 16.45
+angular_velocity_random = 0.61
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+linear_accel_random = 0.05
+damping = 5.71
+angle = -720.0
+scale = 8.0
+scale_random = 0.82
+color = Color( 0.184314, 0.352941, 0.168627, 1 )
+
+[sub_resource type="CircleShape2D" id=6]
+radius = 19.2516
+
+[node name="Bush" type="Area2D" groups=[
+"target",
+]]
+script = ExtResource( 2 )
+
+[node name="Sprite" type="AnimatedSprite" parent="."]
+scale = Vector2( 0.063, 0.08 )
+frames = SubResource( 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 2 )
+
+[node name="Particles2D" type="Particles2D" parent="."]
+emitting = false
+amount = 40
+lifetime = 4.3
+one_shot = true
+speed_scale = 2.41
+explosiveness = 0.87
+randomness = 0.18
+process_material = SubResource( 5 )
+
+[node name="Area2D" type="Area2D" parent="."]
+space_override = 3
+gravity_vec = Vector2( 0, 0 )
+linear_damp = 12.0
+angular_damp = 29.858
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource( 6 )
+
+[connection signal="body_entered" from="." to="." method="_on_Bush1_body_entered"]

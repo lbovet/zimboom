@@ -1,0 +1,80 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Field.gd" type="Script" id=1]
+[ext_resource path="res://Tank.tscn" type="PackedScene" id=2]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 508.316, 365.276 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 512.372, 16.5424 )
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 11.2731, 298.849 )
+
+[sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 13.3929, 299.584 )
+
+[node name="Field" type="Area2D" groups=[
+"range",
+]]
+position = Vector2( 3.41637, -0.172768 )
+script = ExtResource( 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 509.627, 299.821 )
+scale = Vector2( 1.00806, 0.818918 )
+shape = SubResource( 1 )
+
+[node name="Tank1" parent="." instance=ExtResource( 2 )]
+position = Vector2( 31.665, 37.2096 )
+rotation = 1.57246
+player = 1
+
+[node name="Tank2" parent="." instance=ExtResource( 2 )]
+position = Vector2( 989.641, 90.0801 )
+rotation = -1.56868
+player = 2
+
+[node name="Tank3" parent="." instance=ExtResource( 2 )]
+position = Vector2( 369.086, 566.957 )
+player = 3
+
+[node name="Wall1" type="StaticBody2D" parent="."]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Wall1"]
+position = Vector2( 509.65, -16.0308 )
+shape = SubResource( 2 )
+
+[node name="Wall2" type="StaticBody2D" parent="."]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Wall2"]
+position = Vector2( 509.591, 615.907 )
+shape = SubResource( 2 )
+
+[node name="Wall3" type="StaticBody2D" parent="."]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Wall3"]
+position = Vector2( -14.1699, 299.525 )
+shape = SubResource( 3 )
+
+[node name="Wall4" type="StaticBody2D" parent="."]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Wall4"]
+position = Vector2( 1035.76, 300.097 )
+shape = SubResource( 4 )
+
+[connection signal="dead" from="Tank1" to="." method="_on_Tank1_dead"]
+[connection signal="zero" from="Tank1" to="." method="_on_Tank1_zero"]
+[connection signal="dead" from="Tank2" to="." method="_on_Tank2_dead"]
+[connection signal="zero" from="Tank2" to="." method="_on_Tank2_zero"]
+[connection signal="dead" from="Tank3" to="." method="_on_Tank3_dead"]
+[connection signal="zero" from="Tank3" to="." method="_on_Tank3_zero"]

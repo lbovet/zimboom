@@ -1,0 +1,138 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://Field.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Terrain.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Game.gd" type="Script" id=3]
+[ext_resource path="res://Controls.tscn" type="PackedScene" id=4]
+[ext_resource path="res://fonts/Xolonium-Regular.ttf" type="DynamicFontData" id=5]
+
+[sub_resource type="DynamicFont" id=1]
+size = 100
+font_data = ExtResource( 5 )
+
+[sub_resource type="CapsuleShape2D" id=2]
+
+[node name="Game" type="Node2D"]
+script = ExtResource( 3 )
+
+[node name="Node2D" type="Node2D" parent="."]
+z_index = -3
+
+[node name="ColorRect" type="ColorRect" parent="Node2D"]
+margin_left = -5.6123
+margin_top = -5.61231
+margin_right = 34.3877
+margin_bottom = 34.3877
+rect_scale = Vector2( 25.9835, 15.3862 )
+color = Color( 0.619608, 0.576471, 0.576471, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Field" parent="." instance=ExtResource( 1 )]
+position = Vector2( 4.53884, -0.172707 )
+
+[node name="Levels" type="Node2D" parent="."]
+
+[node name="Desert" type="Node2D" parent="Levels"]
+
+[node name="Terrain" parent="Levels/Desert" instance=ExtResource( 2 )]
+polygon = PoolVector2Array( 153.503, 20.3648, 15.3181, 120.259, 45.6246, 556.897, 304.913, 565.876, 371.139, 482.814, 450.833, 559.141, 1010.94, 584.958, 996.877, 162.785, 880.141, 99.9272, 992.387, 59.5186, 989.559, 18.8665 )
+rocks = 0.07
+
+[node name="Forrest" type="Node2D" parent="Levels"]
+pause_mode = 1
+
+[node name="Terrain" parent="Levels/Forrest" instance=ExtResource( 2 )]
+position = Vector2( 87.4532, 113.362 )
+polygon = PoolVector2Array( -32.8489, 127.123, -54.1757, 434.677, 161.58, 439.167, 270.459, 343.758, 734.036, 453.759, 898.795, 462.739, 929.101, 213.552, 732.67, 106.918, 507.055, -106.349, 179.296, -99.6146, 133.275, 64.2649 )
+bushes = 2.0
+rocks = 0.1
+
+[node name="Canyon" type="Node2D" parent="Levels"]
+
+[node name="Upper Rocks" parent="Levels/Canyon" instance=ExtResource( 2 )]
+position = Vector2( 106.535, 108.75 )
+color = Color( 0.443137, 0.482353, 0.447059, 0.631373 )
+polygon = PoolVector2Array( 49.3341, -98.4921, 62.5604, 19.3664, 67.0502, 86.7141, 108.459, 123.166, 148.822, 182.028, 229.548, 200.528, 389.318, 150.074, 448.181, 207.255, 577.679, 291.345, 661.955, 317.941, 743.238, 271.555, 760.59, 183.456, 757.921, 86.0125, 791.566, -26.7821, 834.089, -62.6537, 864.25, -100.751, 797.579, -103.926, 743.608, -70.5907, 710.748, 2.40192, 700.523, 69.9945, 699.188, 202.144, 640.872, 240.491, 545.462, 185.491, 461.278, 99.0612, 417.909, 67.6665, 207.685, 131.575, 120.231, 50.8486, 124.539, -106.349 )
+rocks = 3.0
+
+[node name="Upper Bush" parent="Levels/Canyon" instance=ExtResource( 2 )]
+color = Color( 0.34902, 0.698039, 0.380392, 0.294118 )
+polygon = PoolVector2Array( 219.606, 57.401, 239.81, 158.423, 315.188, 214.361, 529.406, 162.912, 639.407, 266.179, 746.961, 323.892, 786.647, 288.969, 807.283, 114.355, 843.793, 31.8097, 864.429, 12.7609, 785.7, 17.2289, 745.655, 63.9482, 741.651, 170.735, 738.981, 229.468, 716.857, 257.199, 642.774, 197.709, 597.876, 125.871, 493.487, 111.279, 352.057, 167.402, 285.831, 98.9321, 311.648, 12.5025, 235.321, 5.76772 )
+bushes = 2.0
+
+[node name="Lower Rocks" parent="Levels/Canyon" instance=ExtResource( 2 )]
+position = Vector2( 14.4931, 218.751 )
+color = Color( 0.443137, 0.482353, 0.447059, 0.631373 )
+polygon = PoolVector2Array( -2.29916, -147.88, 4.43562, -85.0226, 7.803, 60.8975, 39.2319, 129.368, 85.2529, 191.103, 184.03, 216.92, 360.256, 238.246, 374.848, 186.613, 453.177, 206.817, 454.3, 253.961, 577.679, 291.345, 665.132, 330.026, 771.077, 370.697, 918.12, 324.676, 977.61, 291.002, 1002.3, 232.634, 1000.8, -26.6581, 944.736, 18.7264, 942.067, 153.545, 942.571, 239.369, 880.835, 292.125, 777.812, 311.206, 690.26, 283.145, 620.424, 253.961, 536.483, 224.777, 468.892, 169.776, 453.177, 193.348, 374.848, 181.001, 352.399, 163.042, 269.337, 174.266, 141.376, 140.592, 111.07, 75.4895, 68.416, 48.5504, 53.5807, -88.39, 39.2319, -135.533 )
+rocks = 3.0
+
+[node name="Lower Bush" parent="Levels/Canyon" instance=ExtResource( 2 )]
+polygon = PoolVector2Array( 8.58331, 298.73, 34.3999, 473.834, 146.646, 509.753, 327.363, 528.835, 356.547, 503.018, 462.853, 516.771, 469.915, 547.917, 578.794, 559.141, 662.979, 595.06, 998.595, 586.081, 1017.68, 469.345, 969.411, 529.958, 874.002, 559.141, 779.715, 586.081, 664.101, 550.162, 588.896, 516.488, 476.65, 481.692, 469.897, 505.398, 361.036, 490.671, 366.649, 460.365, 99.5027, 419.956, 52.3593, 349.241 )
+bushes = 2.0
+
+[node name="Mountain" type="Node2D" parent="Levels"]
+
+[node name="Terrain" parent="Levels/Mountain" instance=ExtResource( 2 )]
+position = Vector2( 54.9018, 93.0352 )
+polygon = PoolVector2Array( -64.7656, 165.21, -59.7202, 303.117, 49.5962, 227.437, 145.458, 175.301, 231.23, 99.6206, 508.725, -43.3317, 412.863, -92.1037, 46.2327, 136.62 )
+rocks = 1.2
+
+[node name="Terrain2" parent="Levels/Mountain" instance=ExtResource( 2 )]
+position = Vector2( 277.149, 160.383 )
+polygon = PoolVector2Array( -246.399, 316.572, -197.627, 393.934, 123.595, 141.665, 248.048, 104.666, 268.229, 193.801, 152.186, 378.798, 234.593, 382.162, 311.956, 272.845, 463.317, 193.801, 488.544, 272.845, 389.318, 377.116, 503.68, 368.707, 651.678, 348.526, 690.359, 245.936, 505.362, 269.481, 481.817, 195.483, 700.45, 139.984, 707.177, 72.7119, 481.817, 109.711, 288.411, 185.392, 263.184, 94.5752, 512.089, -24.832, 542.361, -115.649, 397.727, -55.1042, 111.823, 79.4391 )
+bushes = 0.1
+rocks = 0.9
+
+[node name="Controls" type="Node2D" parent="."]
+
+[node name="Controls1" parent="Controls" instance=ExtResource( 4 )]
+modulate = Color( 0.635294, 0.588235, 0.0313726, 0.360784 )
+position = Vector2( 103.847, 46.9703 )
+rotation = 1.5708
+player = 1
+
+[node name="Controls2" parent="Controls" instance=ExtResource( 4 )]
+modulate = Color( 0.054902, 0.435294, 0.835294, 0.388235 )
+position = Vector2( 917.263, 533.288 )
+rotation = -1.5708
+player = 2
+
+[node name="Controls3" parent="Controls" instance=ExtResource( 4 )]
+modulate = Color( 0.603922, 0.247059, 0.803922, 0.356863 )
+position = Vector2( 393.722, 496.634 )
+player = 3
+
+[node name="GameOver" type="Node2D" parent="."]
+
+[node name="Label" type="Label" parent="GameOver"]
+margin_left = 205.407
+margin_top = 237.133
+margin_right = 797.406
+margin_bottom = 357.133
+custom_fonts/font = SubResource( 1 )
+text = "No Winner"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Timer" type="Timer" parent="GameOver"]
+wait_time = 1.083
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2( 510.926, 302.351 )
+current = true
+
+[node name="Reset" type="TouchScreenButton" parent="."]
+position = Vector2( 735.27, 97.6655 )
+rotation = 1.57011
+scale = Vector2( 15.7779, 11.1667 )
+shape = SubResource( 2 )
+action = "reset"
+
+[connection signal="game_over" from="Field" to="." method="_on_Field_game_over"]
+[connection signal="tank_removed" from="Field" to="." method="_on_Field_tank_removed"]
+[connection signal="timeout" from="GameOver/Timer" to="." method="_on_Timer_timeout"]
