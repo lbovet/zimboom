@@ -11,6 +11,7 @@ data_*/
 android/
 *.apk
 *.apk.idsig
+*.pck
 
 *.exe
 html/

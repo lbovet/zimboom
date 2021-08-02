@@ -19,11 +19,11 @@ script = ExtResource( 3 )
 z_index = -3
 
 [node name="ColorRect" type="ColorRect" parent="Node2D"]
-margin_left = -5.6123
-margin_top = -5.61231
-margin_right = 34.3877
-margin_bottom = 34.3877
-rect_scale = Vector2( 25.9835, 15.3862 )
+margin_left = -60.3407
+margin_top = -60.3407
+margin_right = -20.3407
+margin_bottom = -20.3407
+rect_scale = Vector2( 28.963, 18.1261 )
 color = Color( 0.619608, 0.576471, 0.576471, 1 )
 __meta__ = {
 "_edit_use_anchors_": false

@@ -10,6 +10,8 @@ func _ready():
 			c.queue_free()
 	node.show()
 	$GameOver.hide()
+	if not OS.has_touchscreen_ui_hint():
+		$Controls.queue_free()
 
 func _process(delta):
 	if Input.is_action_just_pressed("reset"):
@@ -29,6 +31,8 @@ func _on_Timer_timeout():
 		$GameOver.show()
 
 func _on_Field_tank_removed(tank):
+	if $Controls == null:
+		return
 	if(tank == 1):
 		$Controls/Controls1.queue_free()
 	if(tank == 2):

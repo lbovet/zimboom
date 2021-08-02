@@ -147,8 +147,19 @@ position = Vector2( -32.7036, -38.7104 )
 scale = Vector2( 3.27957, 3.6002 )
 shape = SubResource( 3 )
 
-[connection signal="timeout" from="Muzzle/MuzzleFire/Timer" to="." method="_on_Timer_timeout"]
+[node name="MouseButton" type="Button" parent="."]
+modulate = Color( 1, 1, 1, 0 )
+margin_left = -21.3315
+margin_top = -25.832
+margin_right = 23.6685
+margin_bottom = 21.168
+rect_scale = Vector2( 0.939053, 1.05825 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [connection signal="timeout" from="Muzzle/MuzzleFire/Timer" to="Muzzle/MuzzleFire/Timer" method="_on_Timer_timeout"]
+[connection signal="timeout" from="Muzzle/MuzzleFire/Timer" to="." method="_on_Timer_timeout"]
 [connection signal="timeout" from="LoadTimer" to="." method="_on_LoadTimer_timeout"]
 [connection signal="timeout" from="Life/Fade" to="." method="_on_Fade_timeout"]
 [connection signal="timeout" from="Label/Hide" to="." method="_on_Hide_timeout"]
@@ -156,3 +167,4 @@ shape = SubResource( 3 )
 [connection signal="timeout" from="Camera2D/FocusTimer" to="." method="_on_FocusTimer_timeout"]
 [connection signal="timeout" from="InitTimer" to="." method="_on_InitTimer_timeout"]
 [connection signal="pressed" from="Button" to="." method="_on_TankButton_pressed"]
+[connection signal="pressed" from="MouseButton" to="." method="_on_MouseButton_pressed"]

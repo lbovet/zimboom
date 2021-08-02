@@ -182,3 +182,7 @@ func _on_InitTimer_timeout():
 func _on_TankButton_pressed():
 	if virgin:
 		die()
+
+func _on_MouseButton_pressed():
+	if virgin:
+		die()
