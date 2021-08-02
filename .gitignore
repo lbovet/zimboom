@@ -12,3 +12,5 @@ android/
 *.apk
 *.apk.idsig
 
+*.exe
+html/
