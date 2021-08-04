@@ -5,7 +5,7 @@ A single-device muliplayer tank game
 
 ## Play
 
-*Keyboard* 
+### Keyboard
 
 🄰 🅂 🄳,  🄹	🄺 🄻, ⬅️⬆️➡️, Escape
 - [Web Browser](https://lbovet.github.io/zimboom/index.html) (Click on background to start game)
@@ -15,7 +15,7 @@ Hit Escape to change map.
 
 Click on tanks to remove them.
 
-*Touch Devices*
+### Touch Devices
 - [Android](https://github.com/lbovet/zimboom/releases/) (coming soon on Google Play)
 - OS X, iOS: please help me, I have no such devices
 
