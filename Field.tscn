@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Field.gd" type="Script" id=1]
 [ext_resource path="res://Tank.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Aircraft.tscn" type="PackedScene" id=3]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 508.316, 365.276 )
@@ -15,11 +16,22 @@ extents = Vector2( 11.2731, 298.849 )
 [sub_resource type="RectangleShape2D" id=4]
 extents = Vector2( 13.3929, 299.584 )
 
+[sub_resource type="Curve2D" id=5]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 296.219, -97.4863, 0, 0, 0, 0, 751.939, -97.4863 )
+}
+
+[sub_resource type="Curve2D" id=6]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 736.224, 683.747, 0, 0, 0, 0, 489.47, 684.874, 0, 0, 0, 0, 347.852, 685.992 )
+}
+
 [node name="Field" type="Area2D" groups=[
 "range",
 ]]
 position = Vector2( 3.41637, -0.172768 )
 script = ExtResource( 1 )
+Aircraft = ExtResource( 3 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 509.627, 299.821 )
@@ -72,9 +84,27 @@ collision_mask = 2
 position = Vector2( 1035.76, 300.097 )
 shape = SubResource( 4 )
 
+[node name="Airfcrafts" type="Timer" parent="."]
+wait_time = 20.0
+autostart = true
+
+[node name="UpperAircraftSpawner" type="Path2D" parent="Airfcrafts"]
+curve = SubResource( 5 )
+
+[node name="PathFollow2D" type="PathFollow2D" parent="Airfcrafts/UpperAircraftSpawner"]
+position = Vector2( 296.219, -97.4863 )
+
+[node name="LowerAircraftSpawner" type="Path2D" parent="Airfcrafts"]
+curve = SubResource( 6 )
+
+[node name="PathFollow2D" type="PathFollow2D" parent="Airfcrafts/LowerAircraftSpawner"]
+position = Vector2( 736.224, 683.747 )
+rotation = 3.13701
+
 [connection signal="dead" from="Tank1" to="." method="_on_Tank1_dead"]
 [connection signal="zero" from="Tank1" to="." method="_on_Tank1_zero"]
 [connection signal="dead" from="Tank2" to="." method="_on_Tank2_dead"]
 [connection signal="zero" from="Tank2" to="." method="_on_Tank2_zero"]
 [connection signal="dead" from="Tank3" to="." method="_on_Tank3_dead"]
 [connection signal="zero" from="Tank3" to="." method="_on_Tank3_zero"]
+[connection signal="timeout" from="Airfcrafts" to="." method="_on_Airfcrafts_timeout"]

@@ -50,6 +50,8 @@ radius = 19.2516
 [node name="Bush" type="Area2D" groups=[
 "target",
 ]]
+z_index = 4
+z_as_relative = false
 script = ExtResource( 2 )
 
 [node name="Sprite" type="AnimatedSprite" parent="."]
@@ -60,6 +62,7 @@ frames = SubResource( 1 )
 shape = SubResource( 2 )
 
 [node name="Particles2D" type="Particles2D" parent="."]
+z_as_relative = false
 emitting = false
 amount = 40
 lifetime = 4.3

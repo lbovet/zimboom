@@ -1,5 +1,7 @@
 extends Area2D
 
+export (PackedScene) var Aircraft
+
 signal tank_removed(tank)
 signal game_over
 
@@ -11,10 +13,10 @@ func _ready():
 var winner = null
 
 func update():
-	print("updating ", len(candidates))
 	if len(candidates) < 2:
 		if len(candidates) == 1:
 			winner = candidates[0]
+		$Airfcrafts.stop()
 		emit_signal("game_over")
 	else:
 		var zeroes=0
@@ -28,6 +30,7 @@ func update():
 				maybeWinner = c
 		if zeroes > len(candidates) -1:
 			winner = maybeWinner
+			$Airfcrafts.stop()
 			emit_signal("game_over")
 	
 func _on_Tank1_dead():
@@ -53,3 +56,29 @@ func _on_Tank3_dead():
 
 func _on_Tank3_zero():
 	update()
+	
+func spawnAircraft():
+	var spawn_location
+	if randf() > 0.5:
+		
+		spawn_location = $Airfcrafts/UpperAircraftSpawner/PathFollow2D
+	else:
+		spawn_location = $Airfcrafts/LowerAircraftSpawner/PathFollow2D
+		
+	spawn_location.offset = randi()
+
+	var aircraft = Aircraft.instance()
+	add_child(aircraft)
+
+	# Set the direction perpendicular to the path direction.
+	var direction = spawn_location.rotation + PI
+
+	# Set the position to a random location.
+	aircraft.position = spawn_location.position
+
+	# Add some randomness to the direction.
+	direction += rand_range(-PI / 8, PI / 8)
+	aircraft.rotation = direction
+
+func _on_Airfcrafts_timeout():
+	spawnAircraft()

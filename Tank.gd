@@ -1,14 +1,18 @@
 extends RigidBody2D
+
 export (PackedScene) var Shell
+export (PackedScene) var Box
+
 export (int) var player
 
 signal dead
 signal zero
 
+const SMALL_ROTATE_RATIO = 0.2
 const ROTATE_IMPULSE = 6000
 const THROTTLE_IMPULSE = 600
-const FIRE_IMPULSE = 50
-const FIRE_SKEW = 30
+const FIRE_IMPULSE = 60
+const FIRE_SKEW = 40
 const LOAD_TIME = 0.260
 const SHOTS_PER_SEQUENCE = 3
 const DAMAGE_RATIO = 1.4
@@ -31,6 +35,9 @@ var lastDelta = 0
 var focused = false
 var ready = false
 var virgin = true
+var springed = false
+var bigShell = 0
+var smallShells = 0
 
 func _ready():	
 	if player == 1:
@@ -53,6 +60,8 @@ func _physics_process(delta):
 	var buttonPressed = Input.is_action_pressed("p"+str(player)+"_button")
 	var rightPressed = Input.is_action_pressed("p"+str(player)+"_right")
 	var leftPressed = Input.is_action_pressed("p"+str(player)+"_left")
+	var amplitude = SMALL_ROTATE_RATIO if Input.is_action_just_pressed("p"+str(player)+"_right") or \
+		Input.is_action_just_pressed("p"+str(player)+"_left") else 1
 
 	var n = 0
 	n += 1 if buttonPressed else 0
@@ -64,11 +73,11 @@ func _physics_process(delta):
 		virgin = false
 
 	if rightPressed:		
-		apply_torque_impulse(ROTATE_IMPULSE*delta)		
+		apply_torque_impulse(ROTATE_IMPULSE*delta*amplitude)		
 		return
 	
 	if leftPressed:
-		apply_torque_impulse(-ROTATE_IMPULSE*delta)
+		apply_torque_impulse(-ROTATE_IMPULSE*delta*amplitude)
 		return
 			
 	if buttonPressed:
@@ -80,11 +89,23 @@ func _physics_process(delta):
 			fire()
 		buttonDuration = 0				
 
-func fire():
-	if not loading and points > 0:
-		shot += 1
+func fire(angle=0):
+	if not loading and points > 0 or bigShell > 0 or smallShells > 0:		
 		var s = Shell.instance()
+		if bigShell > 0:
+			s.setBig()
+			bigShell -= 1
+		elif smallShells > 0:
+			s.setSmall()
+			smallShells -= 1		
+			if angle == 0:	
+				fire(-PI/28)
+				fire(PI/28)
+		else:
+			shot += 1
+			addPoints(-1)		
 		s.transform = transform * $Muzzle.transform
+		s.rotate(angle)
 		get_parent().add_child(s)
 		$Muzzle/MuzzleFire/Timer.start_default()	
 		s.setSource(self)
@@ -95,10 +116,11 @@ func fire():
 		else:
 			$LoadTimer.start(LOAD_TIME)
 		# recoil
-		apply_impulse(Vector2(FIRE_SKEW*randf()-FIRE_SKEW/2,FIRE_SKEW*randf()-FIRE_SKEW/2), 
-			transform.basis_xform(Vector2(0, FIRE_IMPULSE*randf())))
+		if not springed and angle == 0 or bigShell:
+			apply_impulse(Vector2(FIRE_SKEW*randf()-FIRE_SKEW/2,FIRE_SKEW*randf()-FIRE_SKEW/2), 
+				transform.basis_xform(Vector2(0, FIRE_IMPULSE*randf())))
 		loading = true		
-		addPoints(-1)
+		
 
 func hit(damage, source):
 	virgin = false
@@ -135,6 +157,12 @@ func addPoints(delta):
 	if points == 0:
 		emit_signal("zero")
 
+func addBigShell():
+	bigShell += 2
+	
+func addSmallShells():
+	smallShells += 9
+
 func showPoints(hide=true):
 	if(lastDelta == 0):
 		$Label.modulate = Color(1, 1, 1)
@@ -159,11 +187,19 @@ func _on_LoadTimer_timeout():
 func _on_Fade_timeout():
 	$Life.hide()	
 
+func addSpring():
+	springed = true
+
 func die():
 	emit_signal("dead")
 	$Life.hide()
 	$Sprite.modulate = Color(0.2,0.2,0.2)
 	$Explosion.restart()
+	if points > 0:
+		var box = Box.instance()
+		box.shells = points / 3		
+		box.global_position = global_position
+		get_parent().add_child(box)
 	if virgin:
 		queue_free()
 

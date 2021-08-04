@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://images/shell.png" type="Texture" id=1]
 [ext_resource path="res://Shell.gd" type="Script" id=2]
@@ -6,12 +6,30 @@
 [ext_resource path="res://images/boom3.png" type="Texture" id=4]
 [ext_resource path="res://images/boom4.png" type="Texture" id=5]
 [ext_resource path="res://images/boom2.png" type="Texture" id=6]
+[ext_resource path="res://images/big-shell.png" type="Texture" id=7]
+[ext_resource path="res://images/small-shell.png" type="Texture" id=8]
+
+[sub_resource type="SpriteFrames" id=8]
+animations = [ {
+"frames": [ ExtResource( 1 ), ExtResource( 7 ), ExtResource( 8 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
 
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 4.9976
 height = 12.3372
 
-[sub_resource type="ParticlesMaterial" id=6]
+[sub_resource type="SpriteFrames" id=3]
+animations = [ {
+"frames": [ ExtResource( 3 ), ExtResource( 6 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 4 ) ],
+"loop": false,
+"name": "default",
+"speed": 5.0
+} ]
+
+[sub_resource type="ParticlesMaterial" id=2]
 flag_disable_z = true
 spread = 180.0
 gravity = Vector3( 0, 0, 0 )
@@ -25,27 +43,19 @@ scale = 41.54
 scale_random = 0.75
 color = Color( 0.270588, 0.231373, 0.231373, 1 )
 
-[sub_resource type="SpriteFrames" id=2]
-animations = [ {
-"frames": [ ExtResource( 3 ), ExtResource( 6 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 4 ) ],
-"loop": false,
-"name": "default",
-"speed": 5.0
-} ]
-
-[sub_resource type="CircleShape2D" id=8]
+[sub_resource type="CircleShape2D" id=4]
 radius = 790.0
 
-[sub_resource type="Gradient" id=4]
+[sub_resource type="Gradient" id=5]
 offsets = PoolRealArray( 0, 0.00974026, 0.246753, 0.568182 )
 colors = PoolColorArray( 0, 0, 0, 1, 0.351562, 0.300751, 0.300751, 1, 0.478818, 0.478818, 0.478818, 1, 1, 1, 1, 1 )
 
-[sub_resource type="GradientTexture" id=5]
-gradient = SubResource( 4 )
+[sub_resource type="GradientTexture" id=6]
+gradient = SubResource( 5 )
 
 [sub_resource type="ParticlesMaterial" id=7]
 trail_divisor = 2
-trail_color_modifier = SubResource( 5 )
+trail_color_modifier = SubResource( 6 )
 emission_shape = 1
 emission_sphere_radius = 4.0
 flag_disable_z = true
@@ -59,20 +69,26 @@ color = Color( 0.780392, 0.764706, 0.764706, 1 )
 "shell",
 ]]
 position = Vector2( -0.408664, -0.25976 )
+z_index = 3
 script = ExtResource( 2 )
 
-[node name="Sprite" type="Sprite" parent="."]
+[node name="Sprite" type="AnimatedSprite" parent="."]
 position = Vector2( 0.0745754, -11.1122 )
 scale = Vector2( 0.063, 0.063 )
-texture = ExtResource( 1 )
+frames = SubResource( 8 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 0.0556774, -11.1362 )
 shape = SubResource( 1 )
 
-[node name="Particles2D" type="Particles2D" parent="."]
+[node name="Explosion" type="AnimatedSprite" parent="."]
 position = Vector2( 0, -18.5975 )
 scale = Vector2( 0.08, 0.08 )
+frames = SubResource( 3 )
+speed_scale = 5.0
+
+[node name="Particles2D" type="Particles2D" parent="Explosion"]
+z_index = 5
 emitting = false
 amount = 30
 lifetime = 0.5
@@ -80,13 +96,7 @@ one_shot = true
 speed_scale = 3.11
 explosiveness = 0.71
 randomness = 0.55
-process_material = SubResource( 6 )
-
-[node name="Explosion" type="AnimatedSprite" parent="."]
-position = Vector2( 0, -18.5975 )
-scale = Vector2( 0.08, 0.08 )
-frames = SubResource( 2 )
-speed_scale = 5.0
+process_material = SubResource( 2 )
 
 [node name="ExplosionRange" type="Area2D" parent="Explosion"]
 position = Vector2( 0, 232.469 )
@@ -95,7 +105,7 @@ scale = Vector2( 12.5, 12.5 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Explosion/ExplosionRange"]
 position = Vector2( 0, -18.5975 )
 scale = Vector2( 0.08, 0.08 )
-shape = SubResource( 8 )
+shape = SubResource( 4 )
 
 [node name="Position2D" type="Position2D" parent="Explosion/ExplosionRange"]
 position = Vector2( 74.9046, -18.6998 )
@@ -111,8 +121,8 @@ process_material = SubResource( 7 )
 [connection signal="animation_finished" from="Explosion" to="." method="_on_Explosion_animation_finished"]
 [connection signal="area_entered" from="Explosion/ExplosionRange" to="." method="_on_ExplosionRange_area_entered"]
 [connection signal="area_entered" from="Explosion/ExplosionRange" to="." method="_on_Area2D_area_entered"]
-[connection signal="area_exited" from="Explosion/ExplosionRange" to="." method="_on_Area2D_area_exited"]
 [connection signal="area_exited" from="Explosion/ExplosionRange" to="." method="_on_ExplosionRange_area_exited"]
+[connection signal="area_exited" from="Explosion/ExplosionRange" to="." method="_on_Area2D_area_exited"]
 [connection signal="body_entered" from="Explosion/ExplosionRange" to="." method="_on_ExplosionRange_body_entered"]
 [connection signal="body_entered" from="Explosion/ExplosionRange" to="." method="_on_Area2D_body_entered"]
 [connection signal="body_exited" from="Explosion/ExplosionRange" to="." method="_on_ExplosionRange_body_exited"]
