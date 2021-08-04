@@ -5,7 +5,7 @@ A single-device muliplayer tank game
 
 ## Play
 
-### Keyboard
+### Desktop
 
 🄰 🅂 🄳,  🄹	🄺 🄻, ⬅️⬆️➡️, Escape
 - [Web Browser](https://lbovet.github.io/zimboom/index.html) (Click on background to start game)
