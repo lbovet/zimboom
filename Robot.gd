@@ -4,49 +4,70 @@ var paths
 var currentDestination = null
 const DIR_DISTANCE=300
 const DISPERSE_DISTANCE=75
+var disperse = false
 var dispersing = 0
 var currentPaths = []
 var shooting = false
+var updating = 0
+var started = false
 
 func updatePaths(paths):
 	self.paths = paths
 
 func _ready():
-	$RayCast2D.collide_with_areas = true
-	$RayCast2D.enabled = true
 	$RayCast2D.add_exception(get_parent())
+	$RayCast2D.collide_with_areas = true
+	$FireLine.add_exception(get_parent())
+	$FireLine.collide_with_areas = true
+	$RayCast2D.enabled = true
 
 func _physics_process(delta):
-	if get_parent().robot and paths != null:
-		computeDestination()
-		var disperse = false
-		var disperseTarget = Vector2(0,-DISPERSE_DISTANCE).rotated(global_rotation)
+	var start = true
+	if not started:
 		for other in get_parent().others:
-			$RayCast2D.cast_to = to_local(other.global_position)
-			if $RayCast2D.get_collider() == other:
-				currentDestination = other.global_position
-				shooting = true
-			else:
-				shooting = false
-			if other != null and other.robot and \
-				(other.global_position + Vector2(0,-DISPERSE_DISTANCE).rotated(other.global_rotation)) \
-				.distance_to(global_position + disperseTarget) < DISPERSE_DISTANCE * 1.5:	
-					disperse = true			
-		if disperse or dispersing > 0:
-			dispersing += delta
-		if dispersing > 2:
-			dispersing = 0
+			if weakref(other).get_ref() and not other.robot:
+				start = start and not other.virgin
+		started = start
+	if get_parent().robot and started and get_parent().life > 0 and paths != null:		
+		if updating == 0:
+			computeDestination()
+			disperse = false
+			var disperseTarget = Vector2(0,-DISPERSE_DISTANCE).rotated(global_rotation)
+			for other in get_parent().others:
+				if !weakref(other).get_ref():
+					continue
+				if not other.robot:
+					$RayCast2D.cast_to = to_local(other.global_position)
+					$RayCast2D.force_raycast_update()
+					if $RayCast2D.get_collider() == other and other.life > 0:
+						currentDestination = other.global_position
+						shooting = true
+					else:
+						shooting = false
+				if other.robot and other.life > 0 and \
+					(other.global_position + Vector2(0,-DISPERSE_DISTANCE).rotated(other.global_rotation)) \
+					.distance_to(global_position + disperseTarget) < DISPERSE_DISTANCE * 1.5:	
+						disperse = true			
+			if disperse or dispersing > 0:
+				dispersing += delta
+			if dispersing > 2:
+				dispersing = 0
 		var dir = Vector2(0,-DIR_DISTANCE).rotated(global_rotation)	
 		var angle = (currentDestination - global_position).angle_to(dir)
-		if shooting:
-			$RayCast2D.cast_to = Vector2(-1000,0)								
-			if $RayCast2D.is_colliding() and $RayCast2D.get_collider().is_in_group("tank"):
+		if $FireLine.is_colliding() and updating == 0:
+			var other = $FireLine.get_collider()
+			if other.is_in_group("tank") and not other.robot and other.life > 0:
 				get_parent().fire()
+				shooting = true
 			
-		if abs(angle) > PI / 60 or disperse:
-			get_parent().rotation_impulse(delta, (angle < 0) or (dispersing > 0 and not shooting))
+		if abs(angle) > PI / 32 or disperse or shooting:
+			get_parent().rotation_impulse(delta, (angle < 0) or (dispersing > 0))
 		else:
 			get_parent().throttle(delta)
+		updating += delta
+		if updating > 0.5:
+			updating = 0
+
 	
 func computeDestination():
 	var threshold = 20
@@ -76,7 +97,7 @@ func computeDestination():
 		closest = Vector2(100000,100000)
 		for path in paths:
 			for point in path:
-				if point.distance_to(direction) < closest.distance_to(direction):
+				if point.distance_to(pos) < closest.distance_to(pos):
 					closest = point			
 		destination = closest
 		

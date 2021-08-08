@@ -12,6 +12,8 @@ func _ready():
 	$Tank1.setOthers([$Tank2, $Tank3])
 	$Tank2.setOthers([$Tank1, $Tank3])
 	$Tank3.setOthers([$Tank2, $Tank1])
+	$Tank1.robot = true
+	$Tank2.robot = true
 
 var winner = null
 
@@ -87,6 +89,9 @@ func _on_Airfcrafts_timeout():
 	spawnAircraft()
 
 func _on_PathCalculation_paths_updated(paths):
-	$Tank1.updatePaths(paths)
-	$Tank2.updatePaths(paths)
-	$Tank3.updatePaths(paths)
+	if $Tank1 != null:
+		$Tank1.updatePaths(paths)
+	if $Tank2 != null:
+		$Tank2.updatePaths(paths)
+	if $Tank3 != null:
+		$Tank3.updatePaths(paths)

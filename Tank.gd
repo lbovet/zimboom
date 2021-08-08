@@ -38,7 +38,7 @@ var virgin = true
 var springed = false
 var bigShell = 0
 var smallShells = 0
-var robot = true
+var robot = false
 var others = []
 
 func _ready():	
@@ -75,11 +75,11 @@ func _physics_process(delta):
 		virgin = false
 
 	if rightPressed:		
-		rotation_impulse(delta, false, amplitude)	
+		rotation_impulse(delta, true, amplitude)	
 		return
 	
 	if leftPressed:
-		rotation_impulse(delta, true, amplitude)
+		rotation_impulse(delta, false, amplitude)
 		return
 			
 	if buttonPressed:
@@ -204,16 +204,19 @@ func addSpring():
 func setOthers(tanks):
 	others = tanks
 
-func die():
+func die(emit=true):
 	emit_signal("dead")
 	$Life.hide()
 	$Sprite.modulate = Color(0.2,0.2,0.2)
 	$Explosion.restart()
-	if points > 0:
+	if points > 0 and emit:
 		var box = Box.instance()
 		box.shells = points / 3		
 		box.global_position = global_position
 		get_parent().add_child(box)
+		box.collision_layer = 128
+		box.collision_mask = 128
+		box.apply_central_impulse(-transform.y * 300)
 	if virgin:
 		queue_free()
 
@@ -231,11 +234,11 @@ func _on_InitTimer_timeout():
 
 func _on_TankButton_pressed():
 	if virgin:
-		die()
+		die(false)
 
 func _on_MouseButton_pressed():
 	if virgin:
-		die()
+		die(false) 
 
 func updatePaths(paths):
 	$Robot.updatePaths(paths)

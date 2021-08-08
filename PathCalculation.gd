@@ -1,5 +1,7 @@
 extends Node2D
 
+const DEBUG_PATHS = false
+
 var rocks
 var triangles
 var ready = false
@@ -19,17 +21,19 @@ func _on_Game_ready():
 func _draw():
 	if not ready:
 		return
-	for rock in rocks:
-		draw_circle(to_local(rock.global_position), 4, Color(1,1,1,0.5))
-	for c in getCorners():
-		draw_circle(to_local(c), 6, Color(1,0,0,0.5))
+	if DEBUG_PATHS:
+		for rock in rocks:
+			draw_circle(to_local(rock.global_position), 4, Color(1,1,1,0.5))
+		for c in getCorners():
+			draw_circle(to_local(c), 6, Color(1,0,0,0.5))
 	var threshold = 80
 	paths = []
 	var blacklist = []
 	for t in triangles:
 		var path = []
 		for i in range(0,3):
-			draw_polyline([t[i], t[(i+1) % 3]], Color(0,1,0,0.1))
+			if DEBUG_PATHS:
+				draw_polyline([t[i], t[(i+1) % 3]], Color(0,1,0,0.1))
 			var weight = (t[i] - t[(i+1) % 3]).length()			
 			var center = t[i] + (t[(i+1) % 3] - t[i])/2
 			if (center - t[(i+2)%3]).length() < threshold / 2:
@@ -60,7 +64,8 @@ func _draw():
 	for path in paths:
 		if len(path) == 1:
 			path.remove(0)
-		draw_polyline(path, Color(0,0,1))		
+		if DEBUG_PATHS:
+			draw_polyline(path, Color(0,0,1))		
 	emit_signal("paths_updated", paths)
 		
 func insideMargin(point: Vector2, margin):

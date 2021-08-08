@@ -167,10 +167,15 @@ __meta__ = {
 script = ExtResource( 9 )
 
 [node name="Destination" type="Polygon2D" parent="Robot"]
+visible = false
 polygon = PoolVector2Array( 6.15118, 6.07089, 5.35748, -6.62831, -4.76219, -6.82674, -4.36534, 6.07089 )
 
 [node name="RayCast2D" type="RayCast2D" parent="Robot"]
 cast_to = Vector2( 0, 400 )
+
+[node name="FireLine" type="RayCast2D" parent="Robot"]
+enabled = true
+cast_to = Vector2( 0, -1000 )
 
 [connection signal="timeout" from="Muzzle/MuzzleFire/Timer" to="Muzzle/MuzzleFire/Timer" method="_on_Timer_timeout"]
 [connection signal="timeout" from="Muzzle/MuzzleFire/Timer" to="." method="_on_Timer_timeout"]
