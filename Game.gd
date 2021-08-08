@@ -1,14 +1,15 @@
 extends Node2D
 
 var gameOver = false
+var currentLevel
 
 func _ready():
 	var level = randi() % $Levels.get_children().size()
-	var node = $Levels.get_children()[level]
+	currentLevel = $Levels.get_children()[level]
 	for c in $Levels.get_children():
-		if not c == node:
+		if not c == currentLevel:
 			c.queue_free()
-	node.show()
+	currentLevel.show()
 	$GameOver.hide()
 	if not OS.has_touchscreen_ui_hint():
 		$Controls.queue_free()

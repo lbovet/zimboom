@@ -5,6 +5,7 @@
 
 [node name="Rock1" type="RigidBody2D" groups=[
 "heavy",
+"rock",
 "target",
 ]]
 mass = 3.06122

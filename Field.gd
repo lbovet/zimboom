@@ -9,6 +9,9 @@ var candidates
 
 func _ready():
 	candidates = [ $Tank1, $Tank2, $Tank3 ]
+	$Tank1.setOthers([$Tank2, $Tank3])
+	$Tank2.setOthers([$Tank1, $Tank3])
+	$Tank3.setOthers([$Tank2, $Tank1])
 
 var winner = null
 
@@ -82,3 +85,8 @@ func spawnAircraft():
 
 func _on_Airfcrafts_timeout():
 	spawnAircraft()
+
+func _on_PathCalculation_paths_updated(paths):
+	$Tank1.updatePaths(paths)
+	$Tank2.updatePaths(paths)
+	$Tank3.updatePaths(paths)

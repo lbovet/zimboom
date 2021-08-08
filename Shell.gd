@@ -69,9 +69,8 @@ func explode():
 func _on_Explosion_animation_finished():	
 	queue_free()
 	
-func _on_shell_area_exited(area):
-	if area.is_in_group("range"):		
-		queue_free()
+func _on_VisibilityNotifier2D_screen_exited():
+	queue_free()
 
 func setSource(tank):
 	addTarget(tank) # To enable close range self-damage

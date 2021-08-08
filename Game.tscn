@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Field.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Terrain.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Game.gd" type="Script" id=3]
 [ext_resource path="res://Controls.tscn" type="PackedScene" id=4]
 [ext_resource path="res://fonts/Xolonium-Regular.ttf" type="DynamicFontData" id=5]
+[ext_resource path="res://PathCalculation.gd" type="Script" id=6]
 
 [sub_resource type="DynamicFont" id=1]
 size = 100
@@ -65,7 +66,7 @@ bushes = 2.0
 [node name="Lower Rocks" parent="Levels/Canyon" instance=ExtResource( 2 )]
 position = Vector2( 14.4931, 218.751 )
 color = Color( 0.443137, 0.482353, 0.447059, 0.631373 )
-polygon = PoolVector2Array( -2.29916, -147.88, 4.43562, -85.0226, 7.803, 60.8975, 39.2319, 129.368, 85.2529, 191.103, 184.03, 216.92, 360.256, 238.246, 374.848, 186.613, 453.177, 206.817, 454.3, 253.961, 577.679, 291.345, 665.132, 330.026, 771.077, 370.697, 918.12, 324.676, 977.61, 291.002, 1002.3, 232.634, 1000.8, -26.6581, 944.736, 18.7264, 942.067, 153.545, 942.571, 239.369, 880.835, 292.125, 777.812, 311.206, 690.26, 283.145, 620.424, 253.961, 536.483, 224.777, 468.892, 169.776, 453.177, 193.348, 374.848, 181.001, 352.399, 163.042, 269.337, 174.266, 141.376, 140.592, 111.07, 75.4895, 68.416, 48.5504, 53.5807, -88.39, 39.2319, -135.533 )
+polygon = PoolVector2Array( -2.29916, -147.88, 4.43562, -85.0226, 7.803, 60.8975, 39.2319, 129.368, 85.2529, 191.103, 184.03, 216.92, 360.256, 238.246, 374.985, 181.864, 470.758, 205.478, 464.765, 256.42, 577.679, 291.345, 665.132, 330.026, 771.077, 370.697, 918.12, 324.676, 977.61, 291.002, 1002.3, 232.634, 1000.8, -26.6581, 944.736, 18.7264, 942.067, 153.545, 942.571, 239.369, 880.835, 292.125, 777.812, 311.206, 690.26, 283.145, 620.424, 253.961, 536.483, 224.777, 481.995, 176.261, 469.259, 201.732, 374.866, 177.01, 352.399, 163.042, 269.337, 174.266, 141.376, 140.592, 111.07, 75.4895, 68.416, 48.5504, 53.5807, -88.39, 39.2319, -135.533 )
 rocks = 3.0
 
 [node name="Lower Bush" parent="Levels/Canyon" instance=ExtResource( 2 )]
@@ -133,6 +134,19 @@ scale = Vector2( 15.7779, 11.1667 )
 shape = SubResource( 2 )
 action = "reset"
 
+[node name="ArtificialIntelligence" type="Node2D" parent="."]
+
+[node name="PathCalculation" type="Node2D" parent="ArtificialIntelligence"]
+z_index = 10
+z_as_relative = false
+script = ExtResource( 6 )
+
+[node name="PathUpdate" type="Timer" parent="ArtificialIntelligence/PathCalculation"]
+wait_time = 0.5
+
+[connection signal="ready" from="." to="ArtificialIntelligence/PathCalculation" method="_on_Game_ready"]
 [connection signal="game_over" from="Field" to="." method="_on_Field_game_over"]
 [connection signal="tank_removed" from="Field" to="." method="_on_Field_tank_removed"]
 [connection signal="timeout" from="GameOver/Timer" to="." method="_on_Timer_timeout"]
+[connection signal="paths_updated" from="ArtificialIntelligence/PathCalculation" to="Field" method="_on_PathCalculation_paths_updated"]
+[connection signal="timeout" from="ArtificialIntelligence/PathCalculation/PathUpdate" to="ArtificialIntelligence/PathCalculation" method="_on_PathUpdate_timeout"]

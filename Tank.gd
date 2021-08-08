@@ -38,6 +38,8 @@ var virgin = true
 var springed = false
 var bigShell = 0
 var smallShells = 0
+var robot = true
+var others = []
 
 func _ready():	
 	if player == 1:
@@ -73,22 +75,31 @@ func _physics_process(delta):
 		virgin = false
 
 	if rightPressed:		
-		apply_torque_impulse(ROTATE_IMPULSE*delta*amplitude)		
+		rotation_impulse(delta, false, amplitude)	
 		return
 	
 	if leftPressed:
-		apply_torque_impulse(-ROTATE_IMPULSE*delta*amplitude)
+		rotation_impulse(delta, true, amplitude)
 		return
 			
 	if buttonPressed:
 		buttonDuration += delta
 		if buttonDuration > 0.15:
-			apply_impulse(Vector2(0,0), transform.basis_xform(Vector2(0,-THROTTLE_IMPULSE*delta)))	
+			throttle(delta)	
 	else:
 		if buttonDuration > 0 && buttonDuration < 0.15:
 			fire()
 		buttonDuration = 0				
 
+func throttle(delta):
+	apply_impulse(Vector2(0,0), transform.basis_xform(Vector2(0,-THROTTLE_IMPULSE*delta)))	
+
+func rotation_impulse(delta, inverse, amplitude=1):
+	if inverse:
+		apply_torque_impulse(ROTATE_IMPULSE*delta*amplitude)		
+	else:
+		apply_torque_impulse(-ROTATE_IMPULSE*delta*amplitude)
+		
 func fire(angle=0):
 	if not loading and points > 0 or bigShell > 0 or smallShells > 0:		
 		var s = Shell.instance()
@@ -190,6 +201,9 @@ func _on_Fade_timeout():
 func addSpring():
 	springed = true
 
+func setOthers(tanks):
+	others = tanks
+
 func die():
 	emit_signal("dead")
 	$Life.hide()
@@ -222,3 +236,6 @@ func _on_TankButton_pressed():
 func _on_MouseButton_pressed():
 	if virgin:
 		die()
+
+func updatePaths(paths):
+	$Robot.updatePaths(paths)

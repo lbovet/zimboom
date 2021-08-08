@@ -18,8 +18,10 @@ func hit(damage, source):
 func destroy():
 	$Sprite.hide()
 	$Particles2D.restart()
-	$CollisionShape2D.remove_and_skip()
-	$Area2D/CollisionShape2D.remove_and_skip()
+	if $CollisionShape2D != null:
+		$CollisionShape2D.remove_and_skip()
+	if $Area2D/CollisionShape2D != null:
+		$Area2D/CollisionShape2D.remove_and_skip()
 
 func _on_Bush1_body_entered(body):
 	if body.is_in_group("heavy"):
