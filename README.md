@@ -16,7 +16,7 @@ Hit Escape to change map.
 Click on tanks to remove them.
 
 ### Touch Devices
-- [Android](https://github.com/lbovet/zimboom/releases/) (coming soon on Google Play)
+- [Android](https://play.google.com/store/apps/details?id=li.chee.zimboom)
 - OS X, iOS: please help me, I have no such devices
 
 Tap in center to change map.
