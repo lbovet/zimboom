@@ -1,6 +1,6 @@
 extends Area2D
 
-const HIT_REWARD = 10
+const HIT_REWARD = 2
 var speed = 480
 var shell_force = 70
 var damage = 11

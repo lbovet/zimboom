@@ -10,6 +10,7 @@ var currentPaths = []
 var shooting = false
 var updating = 0
 var started = false
+var original
 
 func updatePaths(paths):
 	self.paths = paths
@@ -28,7 +29,13 @@ func _physics_process(delta):
 			if weakref(other).get_ref() and not other.robot:
 				start = start and not other.virgin
 		started = start
+		if started and get_parent().robot:
+			get_parent().emit_signal("robot")
+	if get_parent().type == get_parent().Type.REMOVE and started:
+		get_parent().die(false)
+		return
 	if get_parent().robot and started and get_parent().life > 0 and paths != null:		
+		$Sprite.hide()
 		if updating == 0:
 			computeDestination()
 			disperse = false
@@ -67,7 +74,6 @@ func _physics_process(delta):
 		updating += delta
 		if updating > 0.5:
 			updating = 0
-
 	
 func computeDestination():
 	var threshold = 20

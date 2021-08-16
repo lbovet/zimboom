@@ -25,12 +25,17 @@ func drop():
 	box.apply_central_impulse(-transform.y * 500)
 	box.rotation = rotation + rand_range(-PI / 2, PI / 2)
 	var rnd = randf()
-	if rnd < 0.5:
-		box.setContent(1)
-	elif rnd < 0.9: 		
-		box.setContent(2)
+	if rnd > 0.8:
+		box.setContent(4) # health
+	elif rnd > 0.7:
+		box.setContent(3) # spring
+	elif rnd > 0.5:
+		box.setContent(2) # big
+	elif rnd > 0.2:
+		box.setContent(1) # small
 	else:
-		box.setContent(3)		
+		box.setContent(0) # shell
+
 	box.z_index = z_index - 1
 	box.collision_layer = 128
 	box.collision_mask = 128

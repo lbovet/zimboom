@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://images/box.png" type="Texture" id=1]
 [ext_resource path="res://images/shell.png" type="Texture" id=2]
@@ -7,16 +7,17 @@
 [ext_resource path="res://images/big-shell.png" type="Texture" id=5]
 [ext_resource path="res://Box.gd" type="Script" id=6]
 [ext_resource path="res://Shell.tscn" type="PackedScene" id=7]
+[ext_resource path="res://images/health.png" type="Texture" id=8]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
-"frames": [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 5 ), ExtResource( 4 ) ],
+"frames": [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 5 ), ExtResource( 4 ), ExtResource( 8 ) ],
 "loop": true,
 "name": "default",
 "speed": 5.0
 } ]
 
-[sub_resource type="CapsuleShape2D" id=3]
+[sub_resource type="CapsuleShape2D" id=2]
 radius = 10.7314
 height = 44.8859
 
@@ -48,7 +49,7 @@ frames = SubResource( 1 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PickArea"]
 scale = Vector2( 2.06014, -0.801646 )
-shape = SubResource( 3 )
+shape = SubResource( 2 )
 
 [node name="FallTimer" type="Timer" parent="."]
 wait_time = 0.6

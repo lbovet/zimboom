@@ -7,6 +7,7 @@ export (int) var player
 
 signal dead
 signal zero
+signal robot
 
 const SMALL_ROTATE_RATIO = 0.2
 const ROTATE_IMPULSE = 6000
@@ -16,7 +17,7 @@ const FIRE_SKEW = 40
 const LOAD_TIME = 0.260
 const SHOTS_PER_SEQUENCE = 3
 const DAMAGE_RATIO = 1.4
-const DESTROY_REWARD = 20
+const DESTROY_REWARD = 15
 const SHOW_OFF_IMPULSE = 100
 const FULL_LIFE = Color(0.1, 0.7, 0.1)
 const HIGH_LIFE = Color(0.6, 0.7, 0.1)
@@ -30,7 +31,7 @@ var life = MAX_LIFE
 var buttonDuration = 0
 var loading = false
 var shot = 0
-var points = 50
+var points = 30
 var lastDelta = 0
 var focused = false
 var ready = false
@@ -40,15 +41,22 @@ var bigShell = 0
 var smallShells = 0
 var robot = false
 var others = []
+var color
+
+enum Type { HUMAN, ROBOT, REMOVE }
+var type = Type.HUMAN
 
 func _ready():	
 	if player == 1:
-		$Sprite.modulate = Color(0.8, 0.6, 0)
+		color = Color(0.8, 0.6, 0)
 	if player == 2:
-		$Sprite.modulate = Color(0, 0.6, 0.9)		
+		color = Color(0, 0.6, 0.9)		
 	if player == 3:
-		$Sprite.modulate = Color(0.7, 0.4, 0.7)		
+		color = Color(0.7, 0.4, 0.7)		
+	$Sprite.modulate = color
 	$InitTimer.start()
+	$Remove.hide()
+	$Robot/Sprite.hide()
 	$Label.hide()
 	$Life.hide()
 
@@ -159,6 +167,10 @@ func showLife():
 	$Life.show()
 	$Life/Fade.start()
 
+func addLife(ratio):
+	life = min(MAX_LIFE, life + ratio*MAX_LIFE)
+	showLife()
+
 func addPoints(delta):
 	var newPoints = max(0, points+delta)
 	lastDelta = points - newPoints	
@@ -233,12 +245,35 @@ func _on_InitTimer_timeout():
 	ready = true
 
 func _on_TankButton_pressed():
-	if virgin:
-		die(false)
+	switchType()
 
 func _on_MouseButton_pressed():
+	switchType()
+
+func setType(newType):
+	robot = false
+	if newType == 1:
+		type = Type.ROBOT
+		robot = true
+		$Robot/Sprite.show()
+		$Sprite.modulate = Color(0.2, 0.7, 0.3)
+	elif newType == 2:
+		$Sprite.modulate = color
+		type = Type.REMOVE
+		$Robot/Sprite.hide()
+		$Remove.show()
+	elif newType == 0:
+		type = Type.HUMAN
+		$Remove.hide()
+
+func switchType():
 	if virgin:
-		die(false) 
+		if type == Type.HUMAN:
+			setType(Type.ROBOT)
+		elif type == Type.ROBOT:
+			setType(Type.REMOVE)
+		elif type == Type.REMOVE:
+			setType(Type.HUMAN)		
 
 func updatePaths(paths):
 	$Robot.updatePaths(paths)

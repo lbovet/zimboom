@@ -2,7 +2,7 @@ extends RigidBody2D
 
 export (PackedScene) var Shell
 
-enum Content { SHELL=0, SMALL_SHELLS=1, BIG_SHELL=2, SPRING=3 }
+enum Content { SHELL=0, SMALL_SHELLS=1, BIG_SHELL=2, SPRING=3, HEALTH=4 }
 
 var content = null
 var targetScale = Vector2(1, 1)
@@ -26,11 +26,16 @@ func _physics_process(delta):
 func setContent(content):
 	$Sprite/Content.frame = content
 	self.content = content
+	if content == Content.SHELL:
+		shells = 15
+	elif content == Content.HEALTH:
+		$Sprite/Content.rotation = 0
+		life = 30
 
 func hit(damage, source):
 	life -= damage
 	if life < 0:
-		if content != Content.SPRING:
+		if content != Content.SPRING and content != Content.HEALTH:
 			fire(source)
 		queue_free()
 		
@@ -62,6 +67,8 @@ func _on_PickArea_body_entered(body):
 			body.addBigShell()
 		if content == Content.SMALL_SHELLS:
 			body.addSmallShells()
+		if content == Content.HEALTH:
+			body.addLife(0.6)
 			
 func _on_FallTimer_timeout():
 	z_index = 1

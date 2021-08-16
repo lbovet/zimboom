@@ -5,7 +5,9 @@ const DEBUG_PATHS = false
 var rocks
 var triangles
 var ready = false
+var blacklist
 var paths
+var thread
 
 signal paths_updated(paths)
 
@@ -19,6 +21,10 @@ func _on_Game_ready():
 	$PathUpdate.start()
 
 func _draw():
+	if DEBUG_PATHS:
+		calculate()
+		
+func calculate(ignore=null):	
 	if not ready:
 		return
 	if DEBUG_PATHS:
@@ -28,7 +34,7 @@ func _draw():
 			draw_circle(to_local(c), 6, Color(1,0,0,0.5))
 	var threshold = 80
 	paths = []
-	var blacklist = []
+	blacklist = []
 	for t in triangles:
 		var path = []
 		for i in range(0,3):
@@ -43,7 +49,7 @@ func _draw():
 					path.append(center)
 		if len(path) > 2:
 			path.append(path[0])
-		paths.append(path)			
+		paths.append(path)				
 	for path in paths:
 		var toRemove=[]
 		for point in blacklist:
@@ -51,7 +57,7 @@ func _draw():
 				if (point - path[i]).length() < 10:
 					path.remove(i)	
 		if len(path) == 1:
-			path.remove(0)			
+			path.remove(0)				
 	for path in paths:			
 		for i in range(len(path)-1, -1, -1):
 			var n = 0
@@ -90,7 +96,6 @@ func triangulate():
 	for triple in triangleArray:
 		triangles.append([allPoints[triple[0]], allPoints[triple[1]], allPoints[triple[2]]])
 	ready = true
-	update()
 	
 func getCorners():
 	var node = get_parent().get_parent().get_node("Field/CollisionShape2D")
@@ -104,3 +109,12 @@ func getCorners():
 
 func _on_PathUpdate_timeout():
 	triangulate()
+	if DEBUG_PATHS:
+		update()
+	else:
+		thread = Thread.new()
+		thread.start(self, "calculate", null)
+
+func _exit_tree():
+	if thread != null:
+		thread.wait_to_finish()

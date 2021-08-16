@@ -85,7 +85,7 @@ position = Vector2( 1035.76, 300.097 )
 shape = SubResource( 4 )
 
 [node name="Airfcrafts" type="Timer" parent="."]
-wait_time = 20.0
+wait_time = 14.0
 autostart = true
 
 [node name="UpperAircraftSpawner" type="Path2D" parent="Airfcrafts"]
@@ -102,9 +102,12 @@ position = Vector2( 736.224, 683.747 )
 rotation = 3.13704
 
 [connection signal="dead" from="Tank1" to="." method="_on_Tank1_dead"]
+[connection signal="robot" from="Tank1" to="." method="_on_Tank1_robot"]
 [connection signal="zero" from="Tank1" to="." method="_on_Tank1_zero"]
 [connection signal="dead" from="Tank2" to="." method="_on_Tank2_dead"]
+[connection signal="robot" from="Tank2" to="." method="_on_Tank2_robot"]
 [connection signal="zero" from="Tank2" to="." method="_on_Tank2_zero"]
 [connection signal="dead" from="Tank3" to="." method="_on_Tank3_dead"]
+[connection signal="robot" from="Tank3" to="." method="_on_Tank3_robot"]
 [connection signal="zero" from="Tank3" to="." method="_on_Tank3_zero"]
 [connection signal="timeout" from="Airfcrafts" to="." method="_on_Airfcrafts_timeout"]
